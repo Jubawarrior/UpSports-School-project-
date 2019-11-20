@@ -1,0 +1,361 @@
+<?php
+    if(isset($_POST['email'])){
+        //Vars
+        $successMsg = '';
+        $errorMsg = '';
+        $errCaptcha = '';
+        // Input vars
+        $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+        $name = filter_var($_POST['name'], FILTER_SANITIZE_STRING);
+        $message = filter_var($_POST['message'], FILTER_SANITIZE_STRING);
+        $captcha = $_POST['g-recaptcha-response'];
+        //Email contents
+        $fromemail =  $email;
+        $subject="Contact form filled by " . $email;
+        $email_message = '<h2 style="text-align:center;">Form details below:</h2>
+                            <p><b>Name:</b> '.$name.'</p>
+                            <p><b>Email:</b> '.$email.'</p>
+                            <p><b>Message:</b> '.$message.'</p>';
+        $toemail="info@pas-zsports.com";	
+        //server Validation
+
+        // Always set content-type when sending HTML email
+        $headers = "MIME-Version: 1.0" . "\r\n";
+        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+        //Post request to server
+        $secretKey = "6LcVNL4UAAAAALHl9ZwNectitnmtM0qfewYJid1n";
+        $url = 'https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($secretKey) .  '&response=' . urlencode($captcha);
+        $response = file_get_contents($url);
+        $responseKeys = json_decode($response,true);
+        //If captcha == true
+        if($responseKeys["success"]){
+            if(mail($toemail, $subject, $email_message, $headers)){
+                $successMsg= "Contact submitted successfully!";
+            }else{
+                $errorMsg= "Error! Contact form not sent";
+            }
+        }else {
+            $errCaptcha = "Kindly complete the reCAPTCHA";
+        }
+    }
+?>
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    <meta http-equiv="Cache-Control" content="public" />
+	<meta http-equiv="Expires" content="2629746 " />
+	<meta name="Classification" content="Sports">
+	<meta name="rating" content="General">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="description" content="The Professional football agency in the world" />
+	<meta name="author" content="" />
+	<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
+	<title>UpSports | Contact Us</title>
+    <link rel="icon" href="./images/upsports-favicon16.png" type="image/png" sizes="16x16">
+	<link rel="stylesheet" href="./css/bootstrap-grid.min.css">
+	<link rel="stylesheet" href="./css/051119-styles.min.css">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="./js/jquery-3.4.1.min.js"></script>
+    <script src="./js/scrollreveal.min.js"></script>
+    <script src="./js/modernizr-custom.js"></script>
+    <script>
+        var $fdeC = jQuery.noConflict();
+        window.addEventListener('load', function(){
+            $fdeC("#overlay").delay(1000).fadeOut("slow");
+        });
+    </script>
+    <!-- Critical -->
+	<style>
+        #overlay{z-index:99999;position:fixed;top:0;left:0;bottom:0;right:0;height:100%;width:100%;background-size:400% 400%;background-color:#fff}.center{position:absolute;top:50%;left:50%;-webkit-transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%);transform:translate(-50%,-50%)}.load{position:absolute;width:20px;height:20px;background:#262626;-webkit-animation:animate 4s infinite forwards ease-in-out;animation:animate 4s infinite forwards ease-in-out}.load:nth-child(1){background:#00485f;left:-24px;top:-24px;-webkit-animation-delay:.5s;animation-delay:.5s}.load:nth-child(2){background:#00deea;left:0;top:-24px;-webkit-animation-delay:1s;animation-delay:1s}.load:nth-child(4){background:#00485f;left:-24px;top:0;-webkit-animation-delay:1.5s;animation-delay:1.5s}.load:nth-child(3){background:#00deea;left:0;top:0;-webkit-animation-delay:2s;animation-delay:2s}@-webkit-keyframes animate{0%{-webkit-transform:rotateY(0);transform:rotateY(0)}20%{-webkit-transform:rotateY(360deg);transform:rotateY(360deg)}40%{-webkit-transform:rotateX(180deg);transform:rotateX(180deg)}}@keyframes animate{0%{-webkit-transform:rotateY(0);transform:rotateY(0)}20%{-webkit-transform:rotateY(360deg);transform:rotateY(360deg)}40%{-webkit-transform:rotateX(180deg);transform:rotateX(180deg)}}
+        span > b {
+            color: rgb(94, 104, 110);
+        }
+    </style>
+</head>
+<body>
+    <div id="overlay">
+        <div class="center">
+            <span class="load"></span>
+            <span class="load"></span>
+            <span class="load"></span>
+            <span class="load"></span>
+        </div>
+    </div>
+
+    <section id="ct-header">
+        <nav id="navbar">
+            <div class="nav-flex container">
+                <div class="Nitem navLeft">
+                    <img src="./images/upsports-logo(clear).png" height="50" width="80" alt="Pas-z Sports Agency Logo" id="logo-img">
+                </div>
+                <div class="Nitem navCenter">
+                    <ul id="navLink">
+                        <li>
+                            <a href="./index.html" class="mainL"><span>Home</span></a>
+                        </li>
+                        <li>
+                            <a href="./about.html" class="mainL"><span>About</span></a>
+                        </li>
+                        <li>
+                            <a href="./team.html" class="mainL"><span>Team</span></a>
+                        </li>
+                        <li>
+							<a href="./information.html" class="mainL"><span>FAQ's</span></a>
+						</li>
+                    </ul>
+                </div>
+                <div class="Nitem navRight">
+                    <a href="./contact-us.php">
+                        <button class="btn-active">Contact Us</button>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Mobile Nav -->
+		<div class="mobile-nav" id="the-mobile">
+            <div class="mobile-left">
+                <div></div>
+            </div>
+            <div class="mobile-center">
+                <img src="./images/upsports-logo(clear).png" height="30" width="50" alt="UpSports Logo" id="logo-mobile">
+            </div>
+            <div class="mobile-right">
+                <input type="checkbox" id="menyAvPaa">
+                <label id="burger" for="menyAvPaa">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </label>
+                <div id="meny">
+                    <ul class="mobile-links">
+                        <li style="padding-top: 10px;">
+                            <a href="./index.html">Home</a>
+                        </li>
+                        <li>
+                            <a href="./about.html">About</a>
+                        </li>
+                        <li>
+                            <a href="./team.html">Team</a>
+                        </li>
+                        <li>
+                            <a href="./contact-us.php" class="mobile-active">Contact</a>
+                        </li>
+                        <li>
+							<a href="./information.html">FAQ's</a>
+						</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="ctHead-inner container">
+            <div class="">
+                <hr  width="60px" size="3px" class="hori" style="margin-left: 7px;display: inline-block;" noshade>
+                <h1 style="color: #fff;text-transform: capitalize;"><span style="font-weight: 500;color: #fff;">Got any questions? Just</span> contact Us</h1>
+            </div>
+        </div>
+    </section>
+    <section class="ct1 container">
+        <div class="ct-left">
+            <hr width="80px" size="3px" class="hori" style="text-align: center;" noshade>
+            <h1>Get in touch</h1>
+            <p style="line-height: 25px;font-size: 18px;">You could fill the form to send us a quick message, reach to us through our social media handles or send a quick email to: <br/> <a href="mailto: info@pas-zsports.com" style="color: rgb(21, 98, 134);text-decoration: none;font-weight: 600;">info@pas-zsports.com</a> </P>
+            <div style="display: flex;margin-top: 15px;">
+                <img src="./images/check-circle.svg" height="25" width="25" alt="Check Circle"> 
+                <p style="margin-left: 5px;margin-top: 3px;">Our support team is online 24/7</p>
+            </div>
+            <div style="display: flex;margin-top: 5px;">
+                <img src="./images/check-circle.svg" height="25" width="25" alt="Check Circle"> 
+                <p style="margin-left: 5px;margin-top: 3px;">We're ready to answer your questions</p>
+            </div>
+        </div>
+        <div class="ct-right">
+
+            
+
+            <form class="ct-form" action="" method="POST" enctype="multipart/form-data" style="border: 0.5px solid rgb(222, 238, 243);">
+                <h3>Contact Form</h3>
+                <p style="font-style: italic;color: rgb(22, 103, 141);">*All fields are mandatory</p><br>
+
+                <!-- Display submission status -->
+                <?php if(!empty($successMsg)){ ?>
+                    <p style="margin-left: 5px;font-weight: bold;background-color: rgb(209, 228, 209)text-align: center;border-radius: 12px;color: rgb(105, 105, 105);padding: .5em 0;"><?php echo $successMsg ?></p>
+                <?php } ?>
+
+                <?php if(!empty($errorMsg)){ ?>
+                    <div class="error">
+                        <img src="./images/exclamation-triangle.svg" height="20" with="20" alt="Error">
+                        <p id="Err" style="margin-left: 5px;font-weight: bold;"><?php echo $errorMsg; ?></p>
+                    </div>
+                <?php } ?>
+
+                <?php if(!empty($errName)){ ?>
+                    <p style="text-align: center;color: rgb(230, 59, 59);"><?php echo $errName ?></p>
+                <?php } ?>
+                <p style="margin-bottom: 25px;">
+                    <!-- name -->
+                    <label for="name">
+                        <span style="margin-bottom: 7px;display: block;"><b>Name</b></span> 
+                    </label>
+                    <input type="text" name="name" id="name" placeholder="Jack Daniel" value="<?php echo !empty($postData['name'])?$postData['name']:''; ?>" required>
+                </p>
+                <?php if(!empty($errEmail)){ ?>
+                    <p style="text-align: center;color: rgb(230, 59, 59);"><?php echo $errEmail ?></p>
+                <?php } ?>
+                <p style="margin-bottom: 25px;">
+                    <!-- Email -->
+                    <label for="email">
+                        <span style="margin-bottom: 7px;display: block;"><b>Email address</b></span>
+                    </label>
+                    <input type="email" name="email" id="email" value="<?php echo !empty($postData['email'])?$postData['email']:''; ?>" placeholder="jack.daniel@pas-zsports.com" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+                </p>
+                <?php if(!empty($errMessage)){ ?>
+                    <p style="text-align: center;color: rgb(230, 59, 59);"><?php echo $errMessage ?></p>
+                <?php } ?>
+                <p style="margin-bottom: 15px;">
+                    <!-- Message -->
+                    <label for="message">
+                        <span style="margin-bottom: 7px;display: block;"><b>Message</b></span> 
+                    </label>
+                    <textarea name="message" cols="30" rows="7" placeholder="Your message goes here..." style="resize: none;" required><?php echo !empty($postData['message'])?$postData['message']:''; ?></textarea>
+                </p>
+                 <!-- Display submission status -->
+                 <?php if(!empty($errCaptcha)){ ?>
+                    <p style="text-align: center;color: rgb(230, 59, 59);"><?php echo $errCaptcha ?></p>
+                <?php } ?>
+                <!-- reCAPTCHA -->
+                <p>
+                    <div class="g-recaptcha" data-sitekey="6LcVNL4UAAAAAEDrigLLc6cCY4pQlK7O98j-FFUO"></div>
+                </p>
+                <p>
+                    <button type="submit" class="btn-active" style="width: 100%;">Send message</button>
+                </p>
+            </form>
+        </div>
+    </section>
+    <section class="ct2 container">
+        <hr width="80px" size="3px" class="hori" style="text-align: center;" noshade>
+        <h1>Why Us?</h1>
+        <!-- Grid -->
+			<div class="ct-grid">
+                <!-- Item -->
+                <div class="ct-item cti-1">
+                    <img src="./images/atom-alt.svg" height="25" width="25" alt="Atom" style="margin-top: 3px;">
+                    <div style="margin-left: 10px;">
+                            <h3 style="margin-top: 0px;">Innovation</h3>
+                            <p>We find new ways in doing things and with our networking and determination we would help you pursue your goal.</p>
+                    </div>
+                </div>
+                <!-- Item -->
+                <div class="ct-item cti-2">
+                    <img src="./images/gem.svg" height="25" width="25" alt="Gem" style="margin-top: 3px;">
+                    <div style="margin-left: 10px;">
+                        <h3 style="margin-top: 0px;">Uniqueness</h3>
+                        <p>We stand out as a unique alternative in athlete representation. </p>
+                    </div>
+                </div>
+                <!-- Item -->
+                <div class="ct-item cti-3">
+                    <img src="./images/clock.svg" height="25" width="25" alt="Clock" style="margin-top: 3px;">
+                    <div style="margin-left: 10px;">
+                        <h3 style="margin-top: 0px;">Working around the clock</h3>
+                        <p>At UpSports, we believe time is of the essence. As a result we work 24/7 to help pursue your goals. </p>
+                    </div>
+                </div>
+            </div>
+    </section>
+    <footer>
+		<div class="f-inner container">
+			<div class="f-Left">
+				<img id="mobile-img" src="./images/main-logo.svg" height="20" alt="">
+				<p>&copy; UpSports. All Rights reserved.</p>
+			</div>
+			<div class="f-center">
+				<p>Want to connect with us? Join us on our channels</p>
+				<div class="img-grid">
+					<a href="#">
+						<img class="sc-icons" src="./images/facebook.svg" height="25" width="25" alt="">
+					</a>
+					<a href="#">
+						<img class="sc-icons" src="./images/twitter.svg" height="25" width="25" alt="">
+					</a>
+					<a href="#">
+						<img class="sc-icons" src="./images/instagram-icon.svg" height="25" width="25" alt="">
+					</a>
+				</div>
+			</div>
+			<div class="f-right">
+				<a href="./privacy-policy.html" style="text-decoration: none;">
+					<p style="font-weight: 600;">Privacy policy</p>
+				</a>
+				<a href="./terms-conditions.html" style="text-decoration: none;">
+					<p style="font-weight: 600;">Terms & Conditions</p>
+				</a>
+			</div>
+		</div>
+	</footer>
+
+    <script>
+        var $abc = jQuery.noConflict();
+
+        window.onscroll = function() {myFunction()};
+        // Desktop nav
+        var navbar = document.getElementById("navbar");
+        var sticky = navbar.offsetTop;
+        // Mobile nav
+        var navMobile = document.getElementById("the-mobile");
+        var stickyMobile = navMobile.offsetTop;
+        function myFunction() {
+            if (window.pageYOffset > sticky || window.pageYOffset > stickyMobile) {
+                if($abc(window).width() >= 768){
+                    navbar.classList.add("sticky-nav")
+                    $abc('#navbar').css('background-color', 'black')
+                    $abc('#navbar').css('transition', '0.5s ease-in')
+                    // Padding
+                    $abc('.ctHead-inner').css('padding', '190px 0 120px 0')
+                    // Images
+                    $abc('#logo-img').attr('src', './images/upsports-logo(white).png')
+                    $abc('#logo-img').css('transition', '0.5s ease-in')
+                }else {
+                    navMobile.classList.add("sticky-nav")
+                    $abc('.mobile-nav').css('background-color', 'rgba(0, 0, 0, 0.9)')
+                    $abc('.mobile-nav').css('transition', '0.5s ease-in')
+                    // Padding
+                    $abc('.ctHead-inner').css('padding', '185px 0 120px 0')
+                    // Images
+                    $abc('#logo-mobile').attr('src', './images/upsports-logo(white).png')
+                    $abc('#logo-mobile').css('transition', '0.5s ease-in')
+                }
+            } else {
+                if($abc(window).width() >= 768){
+                    navbar.classList.remove("sticky-nav");
+                    $abc('#navbar').css('background-color', 'rgba(0, 0, 0, 0.05)')
+                    $abc('#navbar').css('transition', '0.5s ease-in')
+                    // padding
+                    $abc('.ctHead-inner').css('padding', '120px 0')
+                    // images
+                    $abc('#logo-img').attr('src', './images/upsports-logo(clear).png')
+                    $abc('#logo-img').css('transition', '0.5s ease-in')
+
+                }else {
+                    navMobile.classList.remove("sticky-nav")
+                    $abc('.mobile-nav').css('background-color', 'rgba(0, 0, 0, 0.5)')
+                    $abc('.mobile-nav').css('transition', '0.5s ease-in')
+                    // padding
+                    $abc('.ctHead-inner').css('padding', '120px 0')
+                    // Images
+                    $abc('#logo-mobile').attr('src', './images/upsports-logo(clear).png')
+                    $abc('#logo-mobile').css('transition', '0.5s ease-in')
+                }
+            }
+        }
+    </script>
+    <script>
+        ScrollReveal().reveal('.cti-1', {delay: 500});
+        ScrollReveal().reveal('.cti-2', {delay: 600});
+        ScrollReveal().reveal('.cti-3', {delay: 700});
+        ScrollReveal().reveal('.cti-4', {delay: 800});
+    </script>
+</body>
+</html>
